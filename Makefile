@@ -1,4 +1,4 @@
-.PHONY: dev build clean help
+.PHONY: dev build deploy clean help
 
 # Default target
 help:
@@ -7,6 +7,7 @@ help:
 	@echo "Usage:"
 	@echo "  make dev      Run the Flask app locally using 'uv'"
 	@echo "  make build    Build the .deb package using Docker (MacOS/Linux)"
+	@echo "  make deploy   Build and SCP the package to 'vanlan'"
 	@echo "  make clean    Remove build artifacts and virtual environment"
 
 # Local development
@@ -18,6 +19,11 @@ build:
 	docker build -t vanlan-builder -f Dockerfile.build .
 	docker run --rm -v "$$(pwd):/output" vanlan-builder
 	@echo "Build complete. Check the current directory for the .deb file."
+
+# Deploy to vanlan
+deploy: build
+	scp vanlan-router_*.deb vanlan:~/
+	@echo "Package deployed to vanlan. Install it with: sudo dpkg -i ~/vanlan-router_*.deb"
 
 # Clean up
 clean:

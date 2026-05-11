@@ -41,6 +41,12 @@ The build process is containerized to support both Linux and MacOS development.
     ```
     The resulting `.deb` package will be placed in the current directory.
 
+3.  Deploy to the Raspberry Pi:
+    ```bash
+    make deploy
+    ```
+    *Note: This requires the hostname `vanlan` to be resolvable or configured in your SSH config.*
+
 ## Development Conventions
 
 *   **Networking:** Always use `nmcli` via the `network_controller.py` wrapper to ensure consistency.
