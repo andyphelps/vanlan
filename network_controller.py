@@ -1,12 +1,19 @@
 import subprocess
 import re
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 def run_command(command):
     try:
+        logger.info(f"Executing: {command}")
         result = subprocess.run(command, capture_output=True, text=True, shell=True)
-        return result.stdout
+        if result.stderr:
+            logger.error(f"Command stderr: {result.stderr}")
+        return result.stdout.strip()
     except Exception as e:
-        print(f"Error running command: {command}\n{e}")
+        logger.error(f"Error running command: {command}\n{e}")
         return ""
 
 def get_status():
@@ -41,9 +48,18 @@ def scan_wifi(interface="wlan1"):
 
 def connect_wifi(interface, ssid, password):
     # This might take a few seconds
+    # First, try to rescan to ensure the SSID is in the cache
+    run_command(f"nmcli device wifi rescan ifname {interface}")
+    
     cmd = f"nmcli device wifi connect '{ssid}' password '{password}' ifname {interface}"
     output = run_command(cmd)
-    return "successfully activated" in output.lower()
+    logger.info(f"Connect output: {output}")
+    
+    # Check for success in output
+    success = "successfully activated" in output.lower()
+    if not success:
+        logger.error(f"Failed to connect to {ssid} on {interface}")
+    return success
 
 def setup_routing():
     # Enable IP forwarding
