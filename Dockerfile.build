@@ -1,0 +1,15 @@
+# Use Debian Bookworm as it matches current Raspberry Pi OS
+FROM debian:bookworm
+
+# Install build dependencies
+RUN apt-get update && apt-get install -y \
+    debhelper \
+    devscripts \
+    python3 \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /build
+COPY . .
+
+# Command to build the package
+CMD ["dpkg-buildpackage", "-us", "-uc", "-b"]

@@ -21,36 +21,25 @@ A Raspberry Pi-based motorhome LAN router with a web management interface. It al
 
 ### Local Development
 
-This project uses `uv` for dependency management and virtual environments.
+This project uses `uv` and a `Makefile` for management.
 
-1.  Install `uv` if you haven't already: [https://github.com/astral-sh/uv](https://github.com/astral-sh/uv)
-2.  Install dependencies and create a venv:
+1.  Install dependencies: `uv sync`
+2.  Run the app:
     ```bash
-    uv sync
-    ```
-3.  Run the app:
-    ```bash
-    uv run app.py
+    make dev
     ```
     *Note: Real network changes require running as root and having `nmcli` installed.*
 
 ### Building the Debian Package
 
-To build the `.deb` package for installation on a Raspberry Pi:
+The build process is containerized to support both Linux and MacOS development.
 
-1.  Install build tools:
-    ```bash
-    sudo apt update && sudo apt install -y debhelper devscripts
-    ```
+1.  Ensure Docker is running.
 2.  Build the package:
     ```bash
-    dpkg-buildpackage -us -uc -b
+    make build
     ```
-3.  Install the generated package:
-    ```bash
-    sudo dpkg -i ../vanlan-router_1.0.0_all.deb
-    sudo apt-get install -f  # To fix missing dependencies
-    ```
+    The resulting `.deb` package will be placed in the directory above the project root.
 
 ## Development Conventions
 

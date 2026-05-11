@@ -28,4 +28,4 @@ def connect():
 if __name__ == '__main__':
     # Initial setup for routing
     network_controller.setup_routing()
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5005, debug=True)
