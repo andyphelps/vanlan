@@ -1,0 +1,13 @@
+[Unit]
+Description=Van LAN Router Web Interface
+After=network.target network-manager.service
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/vanlan-router
+ExecStart=/usr/bin/python3 app.py
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
