@@ -39,7 +39,7 @@ The build process is containerized to support both Linux and MacOS development.
     ```bash
     make build
     ```
-    The resulting `.deb` package will be placed in the directory above the project root.
+    The resulting `.deb` package will be placed in the current directory.
 
 ## Development Conventions
 

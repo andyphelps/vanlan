@@ -16,11 +16,13 @@ dev:
 # Build the Debian package using Docker
 build:
 	docker build -t vanlan-builder -f Dockerfile.build .
-	docker run --rm -v "$$(pwd)/..:/build-output" vanlan-builder sh -c "cp ../vanlan-router_*.deb /build-output/ 2>/dev/null || true"
-	@echo "Build complete. Check the parent directory for the .deb file."
+	docker run --rm -v "$$(pwd):/output" vanlan-builder
+	@echo "Build complete. Check the current directory for the .deb file."
 
 # Clean up
 clean:
 	rm -rf .venv
-	rm -f build_on_mac.sh
+	rm -f vanlan-router_*.deb
+	rm -f vanlan-router_*.changes
+	rm -f vanlan-router_*.buildinfo
 	@echo "Cleaned up."

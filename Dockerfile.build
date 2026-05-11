@@ -6,10 +6,14 @@ RUN apt-get update && apt-get install -y \
     debhelper \
     devscripts \
     python3 \
+    python3-flask \
     && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /build
+# Create a directory for the source and the output
+WORKDIR /build/source
+
+# Copy the source code
 COPY . .
 
-# Command to build the package
-CMD ["dpkg-buildpackage", "-us", "-uc", "-b"]
+# Build the package and move it to the /output volume
+CMD sh -c "dpkg-buildpackage -us -uc -b && cp ../vanlan-router_*.deb /output/"

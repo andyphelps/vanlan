@@ -1,5 +1,5 @@
 app.py opt/vanlan-router/
 network_controller.py opt/vanlan-router/
-templates/* opt/vanlan-router/templates/
-static/* opt/vanlan-router/static/
+templates opt/vanlan-router/
+static opt/vanlan-router/
 debian/vanlan-router.service lib/systemd/system/
