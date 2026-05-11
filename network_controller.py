@@ -48,10 +48,18 @@ def connect_wifi(interface, ssid, password):
 def setup_routing():
     # Enable IP forwarding
     run_command("sudo sysctl -w net.ipv4.ip_forward=1")
-    # Basic NAT setup (assuming wlan0 is AP and wlan1/usb0 are internet)
-    # This should be more robust in production
-    run_command("sudo iptables -t nat -A POSTROUTING -o wlan1 -j MASQUERADE")
-    run_command("sudo iptables -t nat -A POSTROUTING -o usb0 -j MASQUERADE")
+    
+    # Check if iptables is available
+    if run_command("which iptables"):
+        # Basic NAT setup (assuming wlan0 is AP and wlan1/usb0 are internet)
+        run_command("sudo iptables -t nat -A POSTROUTING -o wlan1 -j MASQUERADE")
+        run_command("sudo iptables -t nat -A POSTROUTING -o usb0 -j MASQUERADE")
+    elif run_command("which nft"):
+        # Basic nftables NAT setup
+        run_command("sudo nft add table ip nat")
+        run_command("sudo nft add chain ip nat postrouting { type nat hook postrouting priority 100 \; }")
+        run_command("sudo nft add rule ip nat postrouting oifname 'wlan1' masquerade")
+        run_command("sudo nft add rule ip nat postrouting oifname 'usb0' masquerade")
 
 def start_ap(interface="wlan0", ssid="VanLAN", password="password"):
     # cmd = f"nmcli device wifi hotspot ifname {interface} ssid '{ssid}' password '{password}'"
