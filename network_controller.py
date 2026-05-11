@@ -9,9 +9,10 @@ def run_command(command):
     try:
         logger.info(f"Executing: {command}")
         result = subprocess.run(command, capture_output=True, text=True, shell=True)
+        combined_output = (result.stdout + "\n" + result.stderr).strip()
         if result.stderr:
             logger.error(f"Command stderr: {result.stderr}")
-        return result.stdout.strip()
+        return combined_output
     except Exception as e:
         logger.error(f"Error running command: {command}\n{e}")
         return ""
@@ -48,15 +49,26 @@ def scan_wifi(interface="wlan1"):
 
 def connect_wifi(interface, ssid, password):
     # This might take a few seconds
-    # First, try to rescan to ensure the SSID is in the cache
     run_command(f"nmcli device wifi rescan ifname {interface}")
     
+    # Delete existing connection with this SSID to avoid conflicts/stale config
+    run_command(f"nmcli connection delete '{ssid}'")
+    
+    # Try a more robust connection approach by creating a profile first if needed
+    # but for simplicity, we'll try the direct connect with a slightly more explicit command
     cmd = f"nmcli device wifi connect '{ssid}' password '{password}' ifname {interface}"
     output = run_command(cmd)
     logger.info(f"Connect output: {output}")
     
-    # Check for success in output
     success = "successfully activated" in output.lower()
+    
+    # If direct connect fails with key-mgmt error, try to manually add the connection
+    if not success and "key-mgmt" in output:
+        logger.info("Retrying with explicit connection profile creation...")
+        run_command(f"nmcli connection add type wifi con-name '{ssid}' ifname {interface} ssid '{ssid}' -- wifi-sec.key-mgmt wpa-psk wifi-sec.psk '{password}'")
+        output = run_command(f"nmcli connection up '{ssid}'")
+        success = "successfully activated" in output.lower()
+
     if not success:
         logger.error(f"Failed to connect to {ssid} on {interface}")
     return success
