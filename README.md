@@ -13,6 +13,16 @@ VanLAN allows you to share a single internet connection (Campsite Wi-Fi, iPhone 
 *   **⏱️ DHCP Management:** Fully configurable lease times and client tracking with hostname resolution.
 *   **🛡️ Secure & Reliable:** Built on NetworkManager and Debian Trixie for enterprise-grade networking stability.
 
+## Prerequisites
+
+Before installing VanLAN, ensure you have the following:
+
+1.  **Raspberry Pi OS Lite:** A fresh installation of **Raspberry Pi OS Lite** (64-bit is recommended).
+2.  **Wi-Fi Country:** You **must** set your Wi-Fi country, otherwise the wireless radio will be disabled by default.
+    *   Run `sudo raspi-config`
+    *   Navigate to **5 Localisation Options** > **L4 WLAN Country**
+    *   Select your country and finish.
+
 ## Quick Install
 
 To set up the official VanLAN Apt repository and install the router software on your Raspberry Pi OS (Trixie), run:
