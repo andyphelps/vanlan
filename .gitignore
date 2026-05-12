@@ -44,3 +44,9 @@ Thumbs.db
 .env
 .env.*
 !.env.example
+
+# AI / Documentation Artifacts
+GEMINI.md
+plan.md
+MEMORY.md
+.gemini/
