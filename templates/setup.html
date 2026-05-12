@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Initial Setup - Van LAN Router</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f8f9fa; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .setup-card { width: 100%; max-width: 500px; }
+    </style>
+</head>
+<body>
+    <div class="card setup-card shadow">
+        <div class="card-body">
+            <h3 class="card-title text-center mb-2">Welcome to Van LAN</h3>
+            <p class="text-muted text-center mb-4">Please secure your router by changing the default credentials.</p>
+            
+            <div id="setup-error" class="alert alert-danger d-none"></div>
+
+            <form id="setup-form">
+                <div class="mb-3">
+                    <label class="form-label">New Van LAN SSID (Network Name)</label>
+                    <input type="text" id="setup-ssid" class="form-control" placeholder="e.g. MyMotorhomeLAN" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">New Wi-Fi Password</label>
+                    <input type="password" id="setup-wifi-pass" class="form-control" placeholder="Min 8 characters" required>
+                </div>
+                <hr>
+                <div class="mb-3">
+                    <label class="form-label">New Admin Dashboard Password</label>
+                    <input type="password" id="setup-admin-pass" class="form-control" placeholder="To unlock this dashboard" required>
+                </div>
+                <button type="button" id="apply-btn" class="btn btn-primary w-100 mt-2">Apply & Restart Router</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('apply-btn').onclick = async () => {
+            const btn = document.getElementById('apply-btn');
+            const err = document.getElementById('setup-error');
+            
+            const payload = {
+                ap_ssid: document.getElementById('setup-ssid').value,
+                ap_password: document.getElementById('setup-wifi-pass').value,
+                admin_password: document.getElementById('setup-admin-pass').value
+            };
+
+            btn.disabled = true;
+            btn.innerText = 'Applying changes...';
+            err.classList.add('d-none');
+
+            try {
+                const res = await fetch('/setup', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+                if (data.success) {
+                    alert('Security setup complete! You will now be disconnected. Please connect to the new Wi-Fi network.');
+                    window.location.href = '/';
+                } else {
+                    err.innerText = data.message || 'Setup failed';
+                    err.classList.remove('d-none');
+                    btn.disabled = false;
+                    btn.innerText = 'Apply & Restart Router';
+                }
+            } catch (e) {
+                err.innerText = 'Network error during setup';
+                err.classList.remove('d-none');
+                btn.disabled = false;
+                btn.innerText = 'Apply & Restart Router';
+            }
+        };
+    </script>
+</body>
+</html>

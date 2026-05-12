@@ -7,6 +7,6 @@ Standards-Version: 4.5.0
 
 Package: vanlan-router
 Architecture: all
-Depends: ${misc:Depends}, python3, python3-flask, network-manager, iptables | nftables
+Depends: ${misc:Depends}, python3, python3-flask, network-manager, dnsmasq-base, usbmuxd, libimobiledevice-utils, avahi-daemon, iptables | nftables
 Description: Raspberry Pi Motorhome LAN Router
  A Flask-based web interface to manage a Van LAN hotspot and outbound connections.

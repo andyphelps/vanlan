@@ -1,5 +1,5 @@
-# Use Debian Bookworm as it matches current Raspberry Pi OS
-FROM debian:bookworm
+# Use Debian Trixie as it matches current Raspberry Pi OS
+FROM debian:trixie
 
 # Install build dependencies
 RUN apt-get update && apt-get install -y \

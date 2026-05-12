@@ -3,13 +3,36 @@ set -e
 
 if [ "$1" = "configure" ]; then
     echo "Configuring Van LAN Router..."
+    
+    # Set the hostname
+    hostnamectl set-hostname router.phelps.van
+    
+    # Update /etc/hosts for local resolution
+    # Remove any existing entries for the old name or the new name to prevent duplicates
+    sed -i '/vanrouter/d' /etc/hosts
+    sed -i '/router.phelps.van/d' /etc/hosts
+    
+    # Add the new entries. 10.42.0.1 is the default gateway for NM 'shared' method.
+    echo "127.0.1.1       router.phelps.van router" >> /etc/hosts
+    echo "10.42.0.1       router.phelps.van router" >> /etc/hosts
+
+    # Setup permissions for configuration
+    CONFIG_FILE="/etc/vanlan-router.config"
+    if [ ! -f "$CONFIG_FILE" ]; then
+        touch "$CONFIG_FILE"
+    fi
+    chmod 600 "$CONFIG_FILE"
+
     # Ensure IP forwarding is enabled
     sysctl -w net.ipv4.ip_forward=1
     echo "net.ipv4.ip_forward=1" > /etc/sysctl.d/99-vanlan-router.conf
     
-    # Reload systemd and enable service
+    # Reload systemd, enable service and restart NetworkManager
     systemctl daemon-reload
+    systemctl enable avahi-daemon
+    systemctl start avahi-daemon
     systemctl enable vanlan-router.service
+    systemctl restart NetworkManager
 fi
 
 exit 0

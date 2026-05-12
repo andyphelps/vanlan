@@ -1,5 +1,8 @@
 app.py opt/vanlan-router/
 network_controller.py opt/vanlan-router/
+config_manager.py opt/vanlan-router/
 templates opt/vanlan-router/
 static opt/vanlan-router/
-debian/vanlan-router.service lib/systemd/system/
+scripts/setup/20-connectivity.conf etc/NetworkManager/conf.d/
+scripts/setup/vanlan-dns.conf etc/NetworkManager/dnsmasq-shared.d/
+scripts/setup/70-vanlan-net.rules lib/udev/rules.d/

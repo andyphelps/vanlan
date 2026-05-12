@@ -1,0 +1,14 @@
+# Internal Ethernet (Debug Port)
+SUBSYSTEM=="net", ACTION=="add", ATTR{address}=="dc:a6:32:b3:b5:2b", NAME="debug0"
+
+# Internal Wi-Fi (Van LAN Hotspot)
+SUBSYSTEM=="net", ACTION=="add", ATTR{address}=="dc:a6:32:b3:b5:2c", NAME="ap0"
+
+# External USB Wi-Fi (Campsite Wi-Fi)
+SUBSYSTEM=="net", ACTION=="add", ATTR{address}=="00:0f:60:0c:1a:3c", NAME="wifi0"
+
+# iPhone Tethering
+# Note: iPhone MAC addresses rotate, so we match by driver/subsystem for the USB port
+# or we can try to match by the predictable kernel path if the MAC check fails.
+# For now, we'll stick to the current MAC, but udev can be more flexible if needed.
+SUBSYSTEM=="net", ACTION=="add", ATTR{address}=="1e:0e:c2:3c:32:07", NAME="tether0"

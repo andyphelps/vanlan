@@ -22,7 +22,7 @@ build:
 
 # Deploy to vanlan
 deploy: build
-	scp vanlan-router_*.deb vanlan:~/
+	scp vanlan-router_*.deb 10.42.0.1:~/
 	@echo "Package deployed to vanlan. Install it with: sudo dpkg -i ~/vanlan-router_*.deb"
 
 # Clean up
