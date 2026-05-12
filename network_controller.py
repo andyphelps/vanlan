@@ -212,6 +212,12 @@ def connect_wifi(interface, ssid, password):
 
     return success
 
+def forget_wifi(ssid):
+    logger.info(f"Forgetting Wi-Fi connection: {ssid}")
+    # NM connection names for Wi-Fi often match the SSID
+    output = run_command(["nmcli", "connection", "delete", ssid])
+    return "successfully deleted" in output.lower() or "not found" in output.lower()
+
 def setup_interface_priorities():
     """
     Ensure ethernet (debug0) has a lower priority (higher metric) than 

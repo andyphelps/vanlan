@@ -179,10 +179,16 @@
                     const outEl = document.getElementById('outbound-status');
                     if (outEl) {
                         outEl.innerHTML = `
-                            <strong>SSID:</strong> ${data.outbound.ssid || 'Disconnected'}<br>
-                            <strong>IP Address:</strong> <code>${data.outbound.ip || 'None'}</code><br>
-                            <strong>Interface:</strong> ${data.outbound.interface || 'None'}<br>
-                            <strong>Status:</strong> <span class="badge ${data.outbound.connected ? 'bg-success' : 'bg-danger'}">${data.outbound.connected ? 'Connected' : 'Disconnected'}</span>
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <strong>SSID:</strong> ${data.outbound.ssid || 'Disconnected'}<br>
+                                    <strong>IP Address:</strong> <code>${data.outbound.ip || 'None'}</code><br>
+                                    <strong>Interface:</strong> ${data.outbound.interface || 'None'}<br>
+                                    <strong>Status:</strong> <span class="badge ${data.outbound.connected ? 'bg-success' : 'bg-danger'}">${data.outbound.connected ? 'Connected' : 'Disconnected'}</span>
+                                </div>
+                                ${data.outbound.connected && data.outbound.interface === 'wifi0' ? 
+                                    `<button class="btn btn-sm btn-outline-danger" onclick="forgetWifi('${data.outbound.ssid}')">Forget</button>` : ''}
+                            </div>
                         `;
                     }
                 }
@@ -210,6 +216,26 @@
                 const outboundStatus = document.getElementById('outbound-status');
                 if (apStatus) apStatus.innerHTML = '<span class="text-danger">Update failed</span>';
                 if (outboundStatus) outboundStatus.innerHTML = '<span class="text-danger">Update failed</span>';
+            }
+        }
+
+        async function forgetWifi(ssid) {
+            if (!confirm(`Are you sure you want to forget and disconnect from "${ssid}"?`)) return;
+            
+            try {
+                const res = await fetch('/forget-wifi', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ssid: ssid})
+                });
+                const result = await res.json();
+                if (result.success) {
+                    updateStatus();
+                } else {
+                    alert('Failed to forget network');
+                }
+            } catch (e) {
+                alert('Error forgetting network');
             }
         }
 

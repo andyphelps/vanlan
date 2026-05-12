@@ -93,6 +93,17 @@ def connect():
     success = network_controller.connect_wifi(interface, ssid, password)
     return jsonify({'success': success})
 
+@app.route('/forget-wifi', methods=['POST'])
+def forget_wifi():
+    if not is_authenticated():
+        return jsonify({'error': 'Unauthorized'}), 401
+    data = request.json
+    ssid = data.get('ssid')
+    if not ssid:
+        return jsonify({'success': False, 'message': 'SSID is required'}), 400
+    success = network_controller.forget_wifi(ssid)
+    return jsonify({'success': success})
+
 @app.route('/settings', methods=['POST'])
 def update_settings():
     if not is_authenticated():
