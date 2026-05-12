@@ -1,37 +1,37 @@
 Origin: VanLAN
 Label: VanLAN Repository
 Codename: trixie
-Date: Tue, 12 May 2026 20:53:42 UTC
+Date: Tue, 12 May 2026 21:01:46 UTC
 Architectures: amd64 arm64 armhf
 Components: main
 Description: Apt repository for VanLAN Router
 MD5Sum:
- 167214ec122643e1c603a4258a6d199f 646 main/binary-amd64/Packages
- 42ba1f85b538fd4fd0459c5e5d9a45f0 466 main/binary-amd64/Packages.gz
+ fb755d6748b79dd77fd20581a3a036aa 646 main/binary-amd64/Packages
+ 95bb5575a66cb066134c1dc367ec69e9 466 main/binary-amd64/Packages.gz
  9125a3abbf2b2c9c3f31cffeb42aa21d 122 main/binary-amd64/Release
- 167214ec122643e1c603a4258a6d199f 646 main/binary-arm64/Packages
- 42ba1f85b538fd4fd0459c5e5d9a45f0 466 main/binary-arm64/Packages.gz
+ fb755d6748b79dd77fd20581a3a036aa 646 main/binary-arm64/Packages
+ 95bb5575a66cb066134c1dc367ec69e9 466 main/binary-arm64/Packages.gz
  5d32282c2458f9c3728a0df421b13f17 122 main/binary-arm64/Release
- 167214ec122643e1c603a4258a6d199f 646 main/binary-armhf/Packages
- 42ba1f85b538fd4fd0459c5e5d9a45f0 466 main/binary-armhf/Packages.gz
+ fb755d6748b79dd77fd20581a3a036aa 646 main/binary-armhf/Packages
+ 95bb5575a66cb066134c1dc367ec69e9 466 main/binary-armhf/Packages.gz
  cd33929193b43268803f360dedfb081b 122 main/binary-armhf/Release
 SHA1:
- 0d8576f4a838687559b855dc24e1e7e3e9fe99a2 646 main/binary-amd64/Packages
- 7c92afbc6a0d4a8c72b3459b48d8c8b13f24804b 466 main/binary-amd64/Packages.gz
+ f5df859bcef3be6ee41d2a8eb665855c6725f75e 646 main/binary-amd64/Packages
+ eee5ac37d6e768c86d428b4c097d109b4d681bed 466 main/binary-amd64/Packages.gz
  82cdbf9aabc9eea8b366c70d5a42a2b57bfff918 122 main/binary-amd64/Release
- 0d8576f4a838687559b855dc24e1e7e3e9fe99a2 646 main/binary-arm64/Packages
- 7c92afbc6a0d4a8c72b3459b48d8c8b13f24804b 466 main/binary-arm64/Packages.gz
+ f5df859bcef3be6ee41d2a8eb665855c6725f75e 646 main/binary-arm64/Packages
+ eee5ac37d6e768c86d428b4c097d109b4d681bed 466 main/binary-arm64/Packages.gz
  1d01406bdb2230afeada766022d293a3368cd93a 122 main/binary-arm64/Release
- 0d8576f4a838687559b855dc24e1e7e3e9fe99a2 646 main/binary-armhf/Packages
- 7c92afbc6a0d4a8c72b3459b48d8c8b13f24804b 466 main/binary-armhf/Packages.gz
+ f5df859bcef3be6ee41d2a8eb665855c6725f75e 646 main/binary-armhf/Packages
+ eee5ac37d6e768c86d428b4c097d109b4d681bed 466 main/binary-armhf/Packages.gz
  6ed02f9b3e305150b4f70fa24fdb34f1ed3720eb 122 main/binary-armhf/Release
 SHA256:
- 062850324a8c76253480a44a3d26739838f5dadd276ca339c3345435d867edc0 646 main/binary-amd64/Packages
- da44644f889b45b683a4069596c776eb979455dc12c923060bf0488f73cc1857 466 main/binary-amd64/Packages.gz
+ 1dc1bbec5a21adebd7d96b9f349c6a74ee766b06001addd4d6c68f9f4065fe2e 646 main/binary-amd64/Packages
+ c24b50b8da65b2e88e7e1127d759103fa26787a2db277b412812a0a2a7200292 466 main/binary-amd64/Packages.gz
  0fbdc8b359ea8703bd0c275895ed3bab5dc0da916e2eefe55308ea67d973ddb6 122 main/binary-amd64/Release
- 062850324a8c76253480a44a3d26739838f5dadd276ca339c3345435d867edc0 646 main/binary-arm64/Packages
- da44644f889b45b683a4069596c776eb979455dc12c923060bf0488f73cc1857 466 main/binary-arm64/Packages.gz
+ 1dc1bbec5a21adebd7d96b9f349c6a74ee766b06001addd4d6c68f9f4065fe2e 646 main/binary-arm64/Packages
+ c24b50b8da65b2e88e7e1127d759103fa26787a2db277b412812a0a2a7200292 466 main/binary-arm64/Packages.gz
  45811e9356b4b62e6f74c9bf3ce7cf4a1ecc12571991355ae7114f0a71c8a7bb 122 main/binary-arm64/Release
- 062850324a8c76253480a44a3d26739838f5dadd276ca339c3345435d867edc0 646 main/binary-armhf/Packages
- da44644f889b45b683a4069596c776eb979455dc12c923060bf0488f73cc1857 466 main/binary-armhf/Packages.gz
+ 1dc1bbec5a21adebd7d96b9f349c6a74ee766b06001addd4d6c68f9f4065fe2e 646 main/binary-armhf/Packages
+ c24b50b8da65b2e88e7e1127d759103fa26787a2db277b412812a0a2a7200292 466 main/binary-armhf/Packages.gz
  a8937a630366bdc8d04529549f6e656eb4a4ae83cccaa263387b893f1cfb3437 122 main/binary-armhf/Release
