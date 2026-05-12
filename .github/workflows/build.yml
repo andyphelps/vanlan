@@ -1,28 +1,64 @@
-name: Build Debian Package
+name: Build and Release Debian Package
 
 on:
   push:
     branches: [ master ]
-  pull_request:
-    branches: [ master ]
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
-  build:
+  release:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y devscripts python3-toml
+
+      - name: Determine Next Version
+        id: next_version
+        uses: anothrNick/github-tag-action@1.67.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WITH_V: false
+          DEFAULT_BUMP: patch
+          DRY_RUN: true
+
+      - name: Update Version in Files
+        run: |
+          NEW_VER="${{ steps.next_version.outputs.new_tag }}"
+          echo "Bumping to version $NEW_VER"
+          
+          # Update pyproject.toml
+          sed -i "s/^version = \".*\"/version = \"$NEW_VER\"/" pyproject.toml
+          
+          # Update debian/changelog
+          # We use dch to add a new entry. We'll use a generic message.
+          export DEBEMAIL="andy@example.com"
+          export DEBFULLNAME="VanLAN CI"
+          dch -v "$NEW_VER" -D unstable "Automated release $NEW_VER"
+          
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
       - name: Build package using Docker
         run: make build
 
-      - name: Upload Debian Package
-        uses: actions/upload-artifact@v4
+      - name: Create Tag and Release
+        uses: softprops/action-gh-release@v2
         with:
-          name: vanlan-router-deb
-          path: vanlan-router_*.deb
-          if-no-files-found: error
+          tag_name: v${{ steps.next_version.outputs.new_tag }}
+          name: Release v${{ steps.next_version.outputs.new_tag }}
+          files: vanlan-router_*.deb
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
