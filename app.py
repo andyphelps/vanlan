@@ -50,7 +50,7 @@ def setup():
     }
     
     if config_manager.save_config(config):
-        network_controller.start_ap(interface="wlan0", ssid=new_ssid, password=new_wifi_pass)
+        network_controller.start_ap(interface="ap0", ssid=new_ssid, password=new_wifi_pass)
         return jsonify({'success': True})
     return jsonify({'success': False, 'message': 'Failed to save config'}), 500
 
@@ -122,7 +122,7 @@ def update_settings():
         # Apply AP changes immediately if SSID, Password, or Lease Time changed
         if new_ap_ssid or new_ap_password or new_lease_hours:
             network_controller.start_ap(
-                interface="wlan0", 
+                interface="ap0", 
                 ssid=config['ap_ssid'], 
                 password=config['ap_password'],
                 lease_time=config.get('dhcp_lease_time', '259200')
