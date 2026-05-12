@@ -16,14 +16,26 @@ if [ "$EUID" -ne 0 ]; then
   exit 1
 fi
 
-# 2. Install dependencies
+# 2. Clean up old/broken setup if it exists
+if [ -f "$LIST_PATH" ]; then
+    echo "Removing previous repository configuration..."
+    rm -f "$LIST_PATH"
+fi
+
+# 3. Install dependencies
 echo "Checking dependencies..."
-apt-get update -qq
+# Use -o to ignore the broken repo we just removed if apt still has it in cache
+apt-get update -o Dir::Etc::sourcelist="$LIST_PATH" -o Dir::Etc::sourceparts="-" -qq || true
 apt-get install -y -qq curl gpg > /dev/null
 
-# 3. Download and install GPG key
+# 4. Download and install GPG key
 echo "Downloading repository key..."
-curl -fsSL "${REPO_URL}/public.key" | gpg --dearmor | tee "$KEY_PATH" > /dev/null
+# Try to fetch the key, handle 404 if GitHub Pages isn't ready yet
+if ! curl -fsSL "${REPO_URL}/public.key" | gpg --dearmor | tee "$KEY_PATH" > /dev/null; then
+    echo "Error: Could not download the repository key."
+    echo "GitHub Pages might still be deploying. Please wait a minute and try again."
+    exit 1
+fi
 
 # 4. Add repository to sources list
 echo "Adding repository to sources list..."
