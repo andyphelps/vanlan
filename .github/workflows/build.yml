@@ -10,6 +10,7 @@ env:
 
 permissions:
   contents: write
+  pages: write
 
 jobs:
   release:
@@ -23,7 +24,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y devscripts python3-toml
+          sudo apt-get install -y devscripts python3-toml reprepro gpg
 
       - name: Determine Next Version
         id: next_version
@@ -36,15 +37,10 @@ jobs:
 
       - name: Update Version in Files
         run: |
-          # Strip 'v' prefix if it exists (e.g., v1.0.1 -> 1.0.1)
           RAW_VER="${{ steps.next_version.outputs.new_tag }}"
           CLEAN_VER="${RAW_VER#v}"
           echo "Bumping to version $CLEAN_VER"
-          
-          # Update pyproject.toml
           sed -i "s/^version = \".*\"/version = \"$CLEAN_VER\"/" pyproject.toml
-          
-          # Update debian/changelog
           export DEBEMAIL="andy@example.com"
           export DEBFULLNAME="VanLAN CI"
           dch -v "$CLEAN_VER" -D unstable "Automated release $CLEAN_VER"
@@ -56,6 +52,7 @@ jobs:
         run: make build
 
       - name: Create Tag and Release
+        id: create_release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v${{ steps.next_version.outputs.new_tag }}
@@ -66,3 +63,58 @@ jobs:
           generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Prepare GPG Key for Repository Signing
+        run: |
+          # Generate a GPG key for signing the repository
+          # Note: In a production environment, you would store this in a GitHub Secret
+          # but for this automated setup, we'll generate one specifically for this run.
+          cat > gpg-gen-key <<EOF
+          %no-protection
+          Key-Type: RSA
+          Key-Length: 4096
+          Name-Real: VanLAN Repository
+          Name-Email: andy@example.com
+          Expire-Date: 0
+          %commit
+          EOF
+          gpg --batch --full-generate-key gpg-gen-key
+          
+          # Export the public key for users to download
+          gpg --armor --export "VanLAN Repository" > public.key
+          
+          # Get the Key ID for reprepro
+          KEY_ID=$(gpg --list-keys --with-colons "VanLAN Repository" | awk -F: '/^pub:/ { print $5 }')
+          echo "KEY_ID=$KEY_ID" >> $GITHUB_ENV
+          
+          # Update reprepro config with the real Key ID
+          sed -i "s/SignWith: yes/SignWith: $KEY_ID/" debian/repo-conf/distributions
+
+      - name: Create Apt Repository with reprepro
+        run: |
+          mkdir -p repo/conf
+          cp debian/repo-conf/distributions repo/conf/
+          cp public.key repo/
+          
+          # Add the .deb to the repository
+          reprepro -b repo includedeb trixie vanlan-router_*.deb
+          
+          # Add a simple README
+          cat > repo/README.md <<EOF
+          # VanLAN Apt Repository
+          
+          To use this repository:
+          
+          \`\`\`bash
+          curl -s https://andyphelps.github.io/vanlan/public.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/vanlan.gpg > /dev/null
+          echo "deb https://andyphelps.github.io/vanlan/ trixie main" | sudo tee /etc/apt/sources.list.d/vanlan.list
+          sudo apt update
+          sudo apt install vanlan-router
+          \`\`\`
+          EOF
+
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: repo
+          branch: gh-pages
