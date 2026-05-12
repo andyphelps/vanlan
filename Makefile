@@ -1,18 +1,12 @@
-.PHONY: dev build deploy clean help
+.PHONY: build deploy clean help
 
 # Default target
 help:
 	@echo "Van LAN Router - Management Tasks"
 	@echo ""
 	@echo "Usage:"
-	@echo "  make dev      Run the Flask app locally using 'uv'"
-	@echo "  make build    Build the .deb package using Docker (MacOS/Linux)"
 	@echo "  make deploy   Build and SCP the package to 'vanlan'"
 	@echo "  make clean    Remove build artifacts and virtual environment"
-
-# Local development
-dev:
-	uv run app.py
 
 # Build the Debian package using Docker
 build:
