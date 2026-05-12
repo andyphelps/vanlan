@@ -37,10 +37,15 @@ jobs:
 
       - name: Update Version in Files
         run: |
+          # Strip 'v' prefix if it exists (e.g., v1.0.1 -> 1.0.1)
           RAW_VER="${{ steps.next_version.outputs.new_tag }}"
           CLEAN_VER="${RAW_VER#v}"
           echo "Bumping to version $CLEAN_VER"
+          
+          # Update pyproject.toml
           sed -i "s/^version = \".*\"/version = \"$CLEAN_VER\"/" pyproject.toml
+          
+          # Update debian/changelog
           export DEBEMAIL="andy@example.com"
           export DEBFULLNAME="VanLAN CI"
           dch -v "$CLEAN_VER" -D unstable "Automated release $CLEAN_VER"
@@ -66,9 +71,6 @@ jobs:
 
       - name: Prepare GPG Key for Repository Signing
         run: |
-          # Generate a GPG key for signing the repository
-          # Note: In a production environment, you would store this in a GitHub Secret
-          # but for this automated setup, we'll generate one specifically for this run.
           cat > gpg-gen-key <<EOF
           %no-protection
           Key-Type: RSA
@@ -79,15 +81,9 @@ jobs:
           %commit
           EOF
           gpg --batch --full-generate-key gpg-gen-key
-          
-          # Export the public key for users to download
           gpg --armor --export "VanLAN Repository" > public.key
-          
-          # Get the Key ID for reprepro
           KEY_ID=$(gpg --list-keys --with-colons "VanLAN Repository" | awk -F: '/^pub:/ { print $5 }')
           echo "KEY_ID=$KEY_ID" >> $GITHUB_ENV
-          
-          # Update reprepro config with the real Key ID
           sed -i "s/SignWith: yes/SignWith: $KEY_ID/" debian/repo-conf/distributions
 
       - name: Create Apt Repository with reprepro
@@ -112,6 +108,9 @@ jobs:
           sudo apt install vanlan-router
           \`\`\`
           EOF
+          
+          # Add .nojekyll to prevent Jekyll from processing the repo
+          touch repo/.nojekyll
 
       - name: Diagnostic - List Repo Structure
         run: ls -R repo
