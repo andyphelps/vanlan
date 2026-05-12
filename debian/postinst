@@ -32,6 +32,11 @@ if [ "$1" = "configure" ]; then
     systemctl enable avahi-daemon
     systemctl start avahi-daemon
     systemctl enable vanlan-router.service
+    
+    echo "Restarting vanlan-router service..."
+    systemctl restart vanlan-router.service
+    
+    echo "Restarting NetworkManager..."
     systemctl restart NetworkManager
 fi
 
