@@ -1,5 +1,8 @@
 .PHONY: build clean help
 
+# VanLAN Router Makefile
+# This file is used for CI builds and local cleanup.
+
 # Default target
 help:
 	@echo "Van LAN Router - Management Tasks"
