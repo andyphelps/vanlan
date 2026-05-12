@@ -1,0 +1,5 @@
+Component: main
+Origin: VanLAN
+Label: VanLAN Repository
+Architecture: arm64
+Description: Apt repository for VanLAN Router

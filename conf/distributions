@@ -1,0 +1,7 @@
+Origin: VanLAN
+Label: VanLAN Repository
+Codename: trixie
+Architectures: amd64 arm64 armhf
+Components: main
+Description: Apt repository for VanLAN Router
+SignWith: B58F6F79E618BFE9
