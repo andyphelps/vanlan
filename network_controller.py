@@ -8,16 +8,19 @@ import time
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-def run_command(args):
+def run_command(args, timeout=10):
     """Runs a command and returns its stdout. Args can be a string (split by space) or a list."""
     if isinstance(args, str):
         args = shlex.split(args)
     try:
         logger.info(f"Executing: {' '.join(args)}")
-        result = subprocess.run(args, capture_output=True, text=True)
+        result = subprocess.run(args, capture_output=True, text=True, timeout=timeout)
         if result.stderr:
             logger.error(f"Command '{' '.join(args)}' stderr: {result.stderr.strip()}")
         return result.stdout.strip()
+    except subprocess.TimeoutExpired:
+        logger.error(f"Command '{' '.join(args)}' timed out after {timeout} seconds")
+        return ""
     except Exception as e:
         logger.error(f"Error running command: {' '.join(args)}\n{e}")
         return ""
