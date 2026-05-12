@@ -245,9 +245,24 @@ def setup_interface_priorities():
                 logger.info(f"Setting metric {metric} for connection '{name}' on {dev}")
                 run_command(["nmcli", "connection", "modify", name, "ipv4.route-metric", metric])
 
+def wait_for_network_manager(timeout=30):
+    """Wait for NetworkManager to be available and responsive."""
+    start_time = time.time()
+    while time.time() - start_time < timeout:
+        output = run_command(["nmcli", "-t", "-f", "STATE", "g"])
+        if output:
+            return True
+        logger.info("Waiting for NetworkManager...")
+        time.sleep(2)
+    return False
+
 def start_ap(interface="ap0", ssid="VanLAN", password="password", lease_time="259200"):
     logger.info(f"Starting AP on {interface} with SSID {ssid} and lease time {lease_time}")
     
+    if not wait_for_network_manager():
+        logger.error("NetworkManager not available. Cannot start AP.")
+        return False
+
     # Ensure Wi-Fi radio is on
     run_command(["nmcli", "radio", "wifi", "on"])
     

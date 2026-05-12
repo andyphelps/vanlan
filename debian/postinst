@@ -27,17 +27,20 @@ if [ "$1" = "configure" ]; then
     sysctl -w net.ipv4.ip_forward=1
     echo "net.ipv4.ip_forward=1" > /etc/sysctl.d/99-vanlan-router.conf
     
-    # Reload systemd, enable service and restart NetworkManager
+    # Reload systemd and enable services
     systemctl daemon-reload
     systemctl enable avahi-daemon
     systemctl start avahi-daemon
     systemctl enable vanlan-router.service
     
+    echo "Restarting NetworkManager to pick up new configurations..."
+    systemctl restart NetworkManager
+    
+    # Give NetworkManager a moment to initialize
+    sleep 2
+
     echo "Restarting vanlan-router service..."
     systemctl restart vanlan-router.service
-    
-    echo "Restarting NetworkManager..."
-    systemctl restart NetworkManager
 fi
 
 exit 0
