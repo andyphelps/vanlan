@@ -113,8 +113,13 @@ jobs:
           \`\`\`
           EOF
 
+      - name: Diagnostic - List Repo Structure
+        run: ls -R repo
+
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           folder: repo
           branch: gh-pages
+          token: ${{ secrets.GITHUB_TOKEN }}
+          clean: true
