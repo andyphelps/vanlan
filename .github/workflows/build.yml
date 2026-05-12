@@ -1,0 +1,28 @@
+name: Build Debian Package
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build package using Docker
+        run: make build
+
+      - name: Upload Debian Package
+        uses: actions/upload-artifact@v4
+        with:
+          name: vanlan-router-deb
+          path: vanlan-router_*.deb
+          if-no-files-found: error
