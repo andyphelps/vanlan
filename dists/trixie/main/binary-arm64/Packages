@@ -1,16 +1,16 @@
 Package: vanlan-router
-Version: 1.0.11
+Version: 1.0.12
 Architecture: all
 Maintainer: Andy <andy@example.com>
 Installed-Size: 75
 Depends: python3, python3-flask, network-manager, dnsmasq-base, usbmuxd, libimobiledevice-utils, avahi-daemon, iptables | nftables
 Priority: optional
 Section: utils
-Filename: pool/main/v/vanlan-router/vanlan-router_1.0.11_all.deb
-Size: 12612
-SHA256: e2f6f4d68ac07fca47b8cddd2ec6cd7b1e86592bee014710e1cce6882d174684
-SHA1: 6c3b8282d8570a37dbcdfa9b2ba9a2ca7bb2a33e
-MD5sum: 569b90ad6e8d0e63f770c0d57fb2b271
+Filename: pool/main/v/vanlan-router/vanlan-router_1.0.12_all.deb
+Size: 12620
+SHA256: c112411995b2d948886173fb16f90cabc330c163fbcdd08f63d417a763abb33d
+SHA1: 50f51ebcc6a5f62121a6591595aeb3153ab16068
+MD5sum: c9b7c817f4ee61bc3e443523cef3935c
 Description: Raspberry Pi Motorhome LAN Router
  A Flask-based web interface to manage a Van LAN hotspot and outbound connections.
 
