@@ -1,6 +1,6 @@
 [Unit]
 Description=Van LAN Router Web Interface
-After=network.target network-manager.service
+After=network.target NetworkManager.service
 
 [Service]
 Type=simple

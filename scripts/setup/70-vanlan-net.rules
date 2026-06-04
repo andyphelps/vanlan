@@ -1,8 +1,7 @@
-# Internal Ethernet (Debug Port)
-SUBSYSTEM=="net", ACTION=="add", ATTR{address}=="dc:a6:32:b3:b5:2b", NAME="debug0"
+SUBSYSTEM=="net", ACTION=="add", DRIVERS=="bcmgenet", NAME="debug0"
 
 # Internal Wi-Fi (Van LAN Hotspot)
-SUBSYSTEM=="net", ACTION=="add", ATTR{address}=="dc:a6:32:b3:b5:2c", NAME="ap0"
+SUBSYSTEM=="net", ACTION=="add", SUBSYSTEMS=="sdio", KERNELS=="mmc1:0001:1", NAME="ap0"
 
 # External USB Wi-Fi (Campsite Wi-Fi)
 SUBSYSTEM=="net", ACTION=="add", ATTR{address}=="00:0f:60:0c:1a:3c", NAME="wifi0"

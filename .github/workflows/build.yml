@@ -71,7 +71,13 @@ jobs:
 
       - name: Prepare GPG Key for Repository Signing
         run: |
-          cat > gpg-gen-key <<EOF
+          if [ -n "${{ secrets.GPG_PRIVATE_KEY }}" ]; then
+            echo "Using persistent GPG key from secrets..."
+            echo "${{ secrets.GPG_PRIVATE_KEY }}" | gpg --batch --import
+          else
+            echo "WARNING: GPG_PRIVATE_KEY secret not found. Generating a temporary key..."
+            echo "This will cause 'Missing key' errors on clients when a new build is released."
+            cat > gpg-gen-key <<EOF
           %no-protection
           Key-Type: RSA
           Key-Length: 4096
@@ -80,10 +86,17 @@ jobs:
           Expire-Date: 0
           %commit
           EOF
-          gpg --batch --full-generate-key gpg-gen-key
+            gpg --batch --full-generate-key gpg-gen-key
+          fi
+          
+          # Export the public key for users to download
           gpg --armor --export "VanLAN Repository" > public.key
+          
+          # Get the Key ID for reprepro
           KEY_ID=$(gpg --list-keys --with-colons "VanLAN Repository" | awk -F: '/^pub:/ { print $5 }')
           echo "KEY_ID=$KEY_ID" >> $GITHUB_ENV
+          
+          # Update reprepro config with the real Key ID
           sed -i "s/SignWith: yes/SignWith: $KEY_ID/" debian/repo-conf/distributions
 
       - name: Create Apt Repository with reprepro
