@@ -4,4 +4,4 @@ Codename: trixie
 Architectures: amd64 arm64 armhf
 Components: main
 Description: Apt repository for VanLAN Router
-SignWith: 6EEFCA25803374D3
+SignWith: 36F513EC32153D35
